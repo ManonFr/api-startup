@@ -2,12 +2,14 @@
   "name": "api-startup",
   "version": "1.0.0",
   "main": "index.js",
- "scripts": {
-  "dev": "nodemon app.js",
-  "start": "node app.js",
-  "migrate": "knex migrate:latest",
-  "rollback": "knex migrate:rollback"
-},
+  "scripts": {
+    "dev": "nodemon app.js",
+    "start": "node app.js",
+    "migrate": "knex migrate:latest",
+    "rollback": "knex migrate:rollback",
+    "db:start": "docker-compose up -d",
+    "db:stop": "docker-compose down"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
