@@ -1,4 +1,5 @@
 const db = require("../db/connection");
+const { validateProfileUpdate } = require("../utils/profileValidator");
 
 /**
  * Controller to get the authenticated user's profile
@@ -42,6 +43,12 @@ async function getProfile(req, res) {
  */
 async function updateProfile(req, res) {
   const userId = req.user.id;
+
+  const validationError = validateProfileUpdate(req.body);
+  if (validationError) {
+    return res.status(400).json(validationError);
+  }
+
   const {
     salon_name,
     salon_address,
