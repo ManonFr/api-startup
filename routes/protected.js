@@ -11,5 +11,6 @@ router.use(authenticateToken);
 
 router.get("/profile", getProfile);
 router.patch("/profile", updateProfile);
-router.get("/history", getHistory);
+
+router.get("/revenue", getHistory);
 module.exports = router;
