@@ -5,9 +5,11 @@ const {
   getProfile,
   updateProfile,
 } = require("../controllers/profileController");
+const { getHistory } = require("../controllers/historyController");
 
-// Protected route to get the current user's profile
-router.get("/profile", authenticateToken, getProfile);
-router.patch("/profile", authenticateToken, updateProfile);
+router.use(authenticateToken);
 
+router.get("/profile", getProfile);
+router.patch("/profile", updateProfile);
+router.get("/history", getHistory);
 module.exports = router;
