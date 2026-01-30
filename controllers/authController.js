@@ -1,7 +1,9 @@
 const bcrypt = require("bcryptjs");
 const db = require("../db/connection");
 const validatePassword = require("../utils/passwordValidator");
+const { sendWelcomeEmail } = require("../utils/mailer");
 
+// POST /register
 async function register(req, res) {
   const {
     email,
@@ -57,6 +59,13 @@ async function register(req, res) {
       manager_first_name,
       manager_last_name,
     });
+
+    // Send welcome email
+    await sendWelcomeEmail(
+      email,
+      salon_name,
+      `${manager_first_name} ${manager_last_name}`,
+    );
 
     res.status(201).json({ message: "Utilisateur enregistré avec succès." });
   } catch (err) {
