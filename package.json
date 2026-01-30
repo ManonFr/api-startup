@@ -8,7 +8,8 @@
     "migrate": "knex migrate:latest",
     "rollback": "knex migrate:rollback",
     "db:start": "docker-compose up -d",
-    "db:stop": "docker-compose down"
+    "db:stop": "docker-compose down",
+    "db:clean": "node scripts/clean-db.js"
   },
   "keywords": [],
   "author": "",
