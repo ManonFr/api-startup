@@ -1,4 +1,5 @@
 const db = require("../db/connection");
+const { updateStatistics } = require("../utils/statisticsService");
 
 // GET /revenue history for the authenticated user
 async function getHistory(req, res) {
@@ -19,27 +20,24 @@ async function getHistory(req, res) {
   }
 }
 
-// POST /revenue
+// POST /revenue (create new entry for the previous month)
 async function createRevenueEntry(req, res) {
   const userId = req.user.id;
   const { amount } = req.body;
-  // Debug log
-  console.log("💡 Incoming POST /revenue");
-  console.log("🔐 userId:", userId);
-  console.log("💰 amount:", amount);
 
+  // Validate amount
   if (amount === undefined || isNaN(amount) || amount < 0) {
-    console.log("invalid amount");
     return res.status(400).json({ error: "Montant manquant ou non valide." });
   }
 
+  // Calculate the previous month
   const today = new Date();
   const previousMonth = new Date(today.getFullYear(), today.getMonth() - 1);
   const year = previousMonth.getFullYear();
   const month = previousMonth.getMonth() + 1;
 
-  console.log("calculated date:", { year, month });
   try {
+    // Prevent duplicate entry for the same user and month
     const existing = await db("revenus")
       .where({ user_id: userId, year, month })
       .first();
@@ -50,18 +48,16 @@ async function createRevenueEntry(req, res) {
         .json({ error: "Les revenus du mois précédent ont déjà été envoyés." });
     }
 
-    await db("revenus")
-      .insert({
-        user_id: userId,
-        year,
-        month,
-        amount,
-      })
-      .then(() => console.log("✅ Revenue inserted successfully"))
-      .catch((err) => {
-        console.error("🔥 Error inserting revenue:", err);
-        throw err;
-      });
+    // Insert the new revenue record
+    await db("revenus").insert({
+      user_id: userId,
+      year,
+      month,
+      amount,
+    });
+
+    // Recalculate statistics for France, region and department
+    await updateStatistics(userId);
 
     return res
       .status(201)

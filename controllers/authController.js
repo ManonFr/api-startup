@@ -77,7 +77,6 @@ async function register(req, res) {
 
     res.status(201).json({ message: "Utilisateur enregistré avec succès." });
   } catch (err) {
-    console.error(err);
     res.status(500).json({ error: "Erreur de serveur interne." });
   }
 }
