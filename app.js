@@ -1,24 +1,24 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
-const protectedRoutes = require("./routes/protected");
-
-const authRoutes = require("./routes/auth");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
+// Middlewares
 app.use(cors());
 app.use(express.json());
 
+// Routes
+const authRoutes = require("./routes/auth");
+const protectedRoutes = require("./routes/protected");
+
 app.use("/api", authRoutes);
-
-app.get("/", (req, res) => {
-  res.send("Bienvenue sur The beauty stats API");
-});
-
 app.use("/api", protectedRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Le serveur est lancé sur le port: ${PORT}`);
-});
+// CRON task (revenue reminder)
+const startRevenueReminderJob = require("./cron/sendRevenueReminder");
+startRevenueReminderJob();
+
+// Server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {});
