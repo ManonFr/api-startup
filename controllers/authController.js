@@ -5,6 +5,10 @@ const validatePassword = require("../utils/passwordValidator");
 const { sendWelcomeEmail } = require("../utils/mailer");
 
 // POST /register
+/**
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ */
 async function register(req, res) {
   const {
     email,
@@ -15,6 +19,7 @@ async function register(req, res) {
     full_time_employees_count,
     manager_first_name,
     manager_last_name,
+    department_id,
   } = req.body;
 
   // Check required fields
@@ -26,7 +31,8 @@ async function register(req, res) {
     !opening_date ||
     !full_time_employees_count ||
     !manager_first_name ||
-    !manager_last_name
+    !manager_last_name ||
+    !department_id
   ) {
     return res
       .status(400)
@@ -59,6 +65,7 @@ async function register(req, res) {
       full_time_employees_count,
       manager_first_name,
       manager_last_name,
+      department_id,
     });
 
     // Send welcome email
