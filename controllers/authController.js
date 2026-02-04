@@ -75,7 +75,12 @@ async function register(req, res) {
       `${manager_first_name} ${manager_last_name}`,
     );
 
-    res.status(201).json({ message: "Utilisateur enregistré avec succès." });
+    res
+      .status(201)
+      .json({
+        message:
+          "Utilisateur enregistré avec succès. Un email de confirmation vous a été envoyé.",
+      });
   } catch (err) {
     res.status(500).json({ error: "Erreur de serveur interne." });
   }
