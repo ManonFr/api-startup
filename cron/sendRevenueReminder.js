@@ -13,8 +13,9 @@ function getPreviousMonth() {
 }
 
 function startRevenueReminderJob() {
-  // Run every day at 9AM starting from the 5th of every moonth
-  cron.schedule("0 9 5-31 * *", async () => {
+  // Runs at 9AM on the 5th, 9th, 13th, 17th, 21st, 25th, and 29th of every month
+  // Used to send reminder emails every 4 days starting from the 5th
+  cron.schedule("0 9 5,9,13,17,21,25,29 * *", async () => {
     try {
       const previousMonth = getPreviousMonth();
       if (
